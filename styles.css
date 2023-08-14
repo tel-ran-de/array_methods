@@ -1,0 +1,13 @@
+#productsContainer {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+  min-width: 200px;
+}
+
+.productCard {
+  background: rgb(247, 246, 246);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 5px 5px 17px 4px rgba(196, 184, 184, 0.8);
+}
