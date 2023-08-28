@@ -6,8 +6,17 @@ let currentCartItems = cartItems.map((el) => ({ ...el, id: newId() }))
 
 // Все селектор из html находятся в верзней части документа в одном месте
 const productContainer = document.getElementById('productsContainer')
+
+// Кнопки
 const buttonAscend = document.getElementById('ascButton')
 const buttonDescend = document.getElementById('descButton')
+let deleteButtons
+
+// Форма
+const addProductForm = document.getElementById('productForm')
+const productNameValue = document.getElementById('productName')
+const productPriceValue = document.getElementById('productPrice')
+const productInStockValue = document.getElementById('productQuantity')
 
 // корзина
 const cart = []
@@ -16,12 +25,12 @@ const totalAmountContainer = document.getElementById('totalAmount')
 const totalPriceContainer = document.getElementById('totalPrice')
 
 const countTotalAmount = (arr) => {
-  const totalAmount = arr.reduce((acc, obj) => acc + obj.quantity, 0)
+  const totalAmount = arr.reduce((acc, obj) => acc + obj.inStock, 0)
   totalAmountContainer.innerText = totalAmount
 }
 
 const countTotalPrice = (arr) => {
-  const totalPrice = arr.reduce((acc, obj) => acc + obj.price * obj.quantity, 0)
+  const totalPrice = arr.reduce((acc, obj) => acc + obj.price * obj.inStock, 0)
   totalPriceContainer.innerText = totalPrice
 }
 
@@ -38,7 +47,11 @@ const createNewArray = (arr) => {
     <div class="productCard" data-id="${product.id}">
       <h2>${product.name}</h2>
       <p> price: ${product.price}</p>
-      <p> amount: ${product.quantity}</p>
+      <div class="quantity-container">
+      <button>-</button> 
+      <p> amount: ${product.inStock}</p>
+      <button>+</button> 
+         </div>
       <button class="deleteButton" data-id="${product.id}">Delete</button>
       <button class="cartButton" data-id="${product.id}">To cart</button>
     </div>`
@@ -49,6 +62,7 @@ const createNewArray = (arr) => {
 
   // обращаемся к элементами после создания в DOM дереве
   toCartButtons = document.querySelectorAll('.cartButton')
+  deleteButtons = document.querySelectorAll('.deleteButton')
 
   // Добавляем в корзину + пересчитываем количество и стоимость
   toCartButtons.forEach((button) => {
@@ -66,6 +80,12 @@ const createNewArray = (arr) => {
   })
 
   // Добавить кнопку удаления товара
+  deleteButtons.forEach((button) => {
+    button.addEventListener('click', (e) => {
+      const currentProductId = e.target.getAttribute('data-id')
+      console.log(currentProductId)
+    })
+  })
 }
 
 // вызываем функция для рендера элементов на странице
@@ -82,16 +102,24 @@ buttonDescend.addEventListener('click', () => {
   createNewArray(currentCartItems)
 })
 
-// Домашнее задание:
-// написать функции, которые будут пересчитывать количество и сумму товаров
-// в корзине при добавлении товаров
+// Добавление товара в список
+addProductForm.addEventListener('submit', (event) => {
+  event.preventDefault()
 
-const arr = [
-  { name: 'olya', age: 29, id: 9 },
-  { name: 'Petya', age: 70, id: 10 },
-  { name: 'ivan', age: 90, id: 15 },
-]
+  const product = {
+    name: productNameValue.value,
+    price: Number(productPriceValue.value),
+    inStock: Number(productInStockValue.value),
+    id: newId(),
+  }
+  console.log(product)
+  currentCartItems.unshift(product) // push()
+  // массив обновился,
+  //вызываю функцию чтобы обновить ui
+  console.log(currentCartItems)
+  createNewArray(currentCartItems)
 
-const v = arr.find((el) => el.id === 10)
-
-console.log(v)
+  productNameValue.value = ''
+  productPriceValue.value = ''
+  productInStockValue.value = ''
+})

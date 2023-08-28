@@ -41,3 +41,9 @@ h1 {
 #submitBtn {
   width: 100%;
 }
+
+.quantity-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
