@@ -156,3 +156,127 @@ job(2)
   .catch((error) => console.log('rejected: ' + error))
 
 job(3).then((data) => console.log(data))
+
+//4.1
+console.log('start')
+
+const promise1 = new Promise((resolve, reject) => {
+  console.log(1)
+  // не влияет на выполнение следующего лога
+  resolve(200) // это то что передается в res при выполнении .then()
+  console.log(3)
+})
+
+// res -> параметр который должен быть вызван
+// выполняется после всех синзронных задач
+promise1.then((res) => {
+  console.log(res)
+})
+
+console.log('end')
+
+//4.2
+console.log('start')
+
+// функция а не переменная
+const fn = () =>
+  new Promise((resolve, reject) => {
+    console.log(1) // выполняется после вызова функции fn()
+    // микрозадача
+    resolve('success') // в любом случае после синхронного кода
+  })
+
+console.log('middle')
+
+fn().then((res) => {
+  console.log(res)
+})
+
+console.log('end')
+// start middle 1 end success
+
+//4.3
+const promise = new Promise((resolve, reject) => {
+  console.log(1)
+  // макрозадача
+  setTimeout(() => {
+    console.log('timerStart')
+    resolve('success') // находится в макрозадаче
+    console.log('timerEnd')
+  }, 0)
+
+  console.log(2)
+})
+
+promise.then((res) => {
+  console.log(res)
+}) // он не выполняется потому что находится внутри макро
+
+console.log(4)
+
+//4.4
+console.log(1)
+
+setTimeout(() => console.log(2)) // макро
+
+Promise.resolve().then(() => console.log(3)) // микро
+
+Promise.resolve().then(() => setTimeout(() => console.log(4))) //макро в микро
+
+Promise.resolve().then(() => console.log(5)) // микро
+
+setTimeout(() => console.log(6)) //макро
+
+console.log(7) //
+
+// 4.5 Результат выполнения кода ниже
+let promise = new Promise(function (resolve, reject) {
+  resolve(1)
+
+  setTimeout(() => resolve(2), 1000)
+})
+
+promise.then((data) => console.log(data))
+
+// 4.6
+// вовращает массив [1, 2, 3]
+// Он ждет выполнения всех промисов внутри
+Promise.all([
+  new Promise((resolve) => setTimeout(() => resolve(1), 3000)), // 1
+  new Promise((resolve) => setTimeout(() => resolve(2), 2000)), // 2
+  new Promise((resolve) => setTimeout(() => resolve(3), 1000)),
+  new Promise((resolve) => setTimeout(() => resolve(7), 500)), // 3
+]).then((data) => console.log(data)) //
+// первый выполнил --> записал, второй --> записал
+// promise. all ждем выполнения каждого
+
+//4.7
+Promise.all([
+  new Promise((resolve, reject) => setTimeout(() => resolve(1), 1000)),
+  new Promise((resolve, reject) => setTimeout(() => reject(new Error('Ошибка!')), 2000)),
+  new Promise((resolve, reject) => setTimeout(() => resolve(3), 3000)),
+])
+  .then((res) => console.log(res))
+  .catch((err) => console.log(err))
+
+// 4.8 возвращает первый успешный!
+Promise.any([
+  new Promise((resolve, reject) => setTimeout(() => resolve(1), 3000)),
+  new Promise((resolve, reject) => setTimeout(() => reject(new Error('Ошибка!')), 1000)),
+  new Promise((resolve, reject) => setTimeout(() => resolve(3), 2000)),
+]).then((data) => console.log(data))
+
+// 4.9 выполняет первый выполненный неважно какой
+Promise.race([
+  new Promise((resolve, reject) => setTimeout(() => resolve(1), 3000)),
+  new Promise((resolve, reject) => setTimeout(() => reject(new Error('Ошибка!')), 2000)),
+  new Promise((resolve, reject) => setTimeout(() => resolve(30), 1000)),
+]).then((data) => console.log(data))
+
+// 4.10 Функция delay(ms) должна возвращать промис,
+// который перейдёт в состояние «выполнен» через ms миллисекунд,
+// так чтобы мы могли добавить к нему.then:
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+delay(3000).then(() => console.log('выполнилось через 3 секунды'))
