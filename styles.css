@@ -47,3 +47,29 @@ h1 {
   align-items: center;
   gap: 5px;
 }
+
+.show-data {
+  max-width: 300px;
+  border-radius: 10px;
+  box-shadow: 10px 10px 32px 0px rgba(0, 0, 0, 0.75);
+}
+.item_cart {
+  max-width: 200px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 10px 10px 32px 0px rgba(0, 0, 0, 0.75);
+}
+
+.item_cart img {
+  width: 100px;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+}

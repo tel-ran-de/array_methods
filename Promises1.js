@@ -280,3 +280,10 @@ Promise.race([
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 delay(3000).then(() => console.log('выполнилось через 3 секунды'))
+
+// API  - для взаимодействия между двумя сторонами
+
+// данные вывести строкой в браузере
+fetch('https://fakestoreapi.com/products/1')
+  .then((res) => res.json())
+  .then((json) => console.log(json))

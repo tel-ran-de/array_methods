@@ -48,9 +48,9 @@ const createNewArray = (arr) => {
       <h2>${product.name}</h2>
       <p> price: ${product.price}</p>
       <div class="quantity-container">
-      <button>-</button> 
+      <button>-</button>
       <p> amount: ${product.inStock}</p>
-      <button>+</button> 
+      <button>+</button>
          </div>
       <button class="deleteButton" data-id="${product.id}">Delete</button>
       <button class="cartButton" data-id="${product.id}">To cart</button>
